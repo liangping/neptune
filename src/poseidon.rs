@@ -82,7 +82,7 @@ impl_arity!(
 );
 
 /// The `Poseidon` structure will accept a number of inputs equal to the arity.
-#[derive(Debug, Clone, PartialEq, Send, Sync)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Poseidon<'a, E, A = U2>
 where
     E: ScalarEngine,
@@ -97,7 +97,7 @@ where
     _e: PhantomData<E>,
 }
 
-#[derive(Debug, Clone, PartialEq, Send, Sync)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct PoseidonConstants<E, A>
 where
     E: ScalarEngine,
