@@ -8,7 +8,6 @@ use ff::Field;
 use generic_array::GenericArray;
 #[cfg(all(feature = "gpu", not(target_os = "macos")))]
 use rust_gpu_tools::opencl::GPUSelector;
-use rayon::prelude::*;
 
 pub trait ColumnTreeBuilderTrait<ColumnArity, TreeArity>
 where
@@ -57,7 +56,7 @@ where
             Some(ref mut batcher) => {
                 batcher.hash_into_slice(&mut self.data[start..start + column_count], columns)?;
             }
-            None => columns.into_par_iter().enumerate().for_each(|(i, column)| {
+            None => columns.iter().enumerate().for_each(|(i, column)| {
                 self.data[start + i] =
                     Poseidon::new_with_preimage(&column, &self.column_constants).hash();
             }),
