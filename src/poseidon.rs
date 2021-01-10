@@ -13,7 +13,7 @@ use typenum::marker_traits::Unsigned;
 use typenum::*;
 
 /// Available arities for the Poseidon hasher.
-pub trait Arity<T>: ArrayLength<T> {
+pub trait Arity<T>: ArrayLength<T> + Send + Sync {
     /// Must be Arity + 1.
     type ConstantsSize: ArrayLength<T>;
 
