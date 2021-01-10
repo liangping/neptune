@@ -13,7 +13,7 @@ use typenum::marker_traits::Unsigned;
 use typenum::*;
 
 /// Available arities for the Poseidon hasher.
-pub trait Arity<T>: ArrayLength<T> + Send + Sync {
+pub trait Arity<T>: ArrayLength<T> {
     /// Must be Arity + 1.
     type ConstantsSize: ArrayLength<T>;
 
@@ -82,7 +82,7 @@ impl_arity!(
 );
 
 /// The `Poseidon` structure will accept a number of inputs equal to the arity.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Send, Sync)]
 pub struct Poseidon<'a, E, A = U2>
 where
     E: ScalarEngine,
@@ -97,7 +97,7 @@ where
     _e: PhantomData<E>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Send, Sync)]
 pub struct PoseidonConstants<E, A>
 where
     E: ScalarEngine,
