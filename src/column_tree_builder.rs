@@ -56,7 +56,7 @@ where
             Some(ref mut batcher) => {
                 batcher.hash_into_slice(&mut self.data[start..start + column_count], columns)?;
             }
-            None => columns.iter().enumerate().for_each(|(i, column)| {
+            None => columns.into_par_iter().enumerate().for_each(|(i, column)| {
                 self.data[start + i] =
                     Poseidon::new_with_preimage(&column, &self.column_constants).hash();
             }),
