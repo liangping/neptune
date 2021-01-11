@@ -16,6 +16,7 @@ where
     TreeArity: Arity<Fr>,
 {
     fn add_columns(&mut self, columns: &[GenericArray<Fr, ColumnArity>]) -> Result<(), Error>;
+    fn add_columns_gpu(&mut self, columns: &[GenericArray<Fr, ColumnArity>]) -> Result<(), Error>;
     fn add_final_columns(
         &mut self,
         columns: &[GenericArray<Fr, ColumnArity>],
@@ -61,6 +62,27 @@ where
                 self.data[start + i] =
                     Poseidon::new_with_preimage(&column, &self.column_constants).hash();
             }),
+        };
+
+        self.fill_index += column_count;
+
+        Ok(())
+    }
+
+    fn add_columns_gpu(&mut self, columns: &[GenericArray<Fr, ColumnArity>]) -> Result<(), Error> {
+        let start = self.fill_index;
+        let column_count = columns.len();
+        let end = start + column_count;
+
+        if end > self.leaf_count {
+            return Err(Error::Other("too many columns".to_string()));
+        }
+
+        match self.column_batcher {
+            Some(ref mut batcher) => {
+                batcher.hash_into_slice(&mut self.data[start..start + column_count], columns)?;
+            }
+            None => return Err(Error::TritonError("Should run in GPU".into_string())),
         };
 
         self.fill_index += column_count;
