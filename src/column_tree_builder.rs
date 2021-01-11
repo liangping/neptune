@@ -82,7 +82,7 @@ where
             Some(ref mut batcher) => {
                 batcher.hash_into_slice(&mut self.data[start..start + column_count], columns)?;
             }
-            None => return Err(Error::TritonError("Should run in GPU".into_string())),
+            None => return Err(Error::TritonError("Should run in GPU".to_string())),
         };
 
         self.fill_index += column_count;
