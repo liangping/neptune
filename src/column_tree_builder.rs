@@ -54,13 +54,14 @@ where
             return Err(Error::Other("too many columns".to_string()));
         }
 
+        let constants= PoseidonConstants::<Bls12, ColumnArity>::new();
         match self.column_batcher {
             Some(ref mut batcher) => {
                 batcher.hash_into_slice(&mut self.data[start..start + column_count], columns)?;
             }
             None => columns.iter().enumerate().for_each(|(i, column)| {
                 self.data[start + i] =
-                    Poseidon::new_with_preimage(&column, &self.column_constants).hash();
+                    Poseidon::new_with_preimage(&column, &constants).hash();
             }),
         };
 
