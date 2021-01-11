@@ -178,8 +178,9 @@ where
         &mut self,
         column: GenericArray<Fr, ColumnArity>,
     ) -> Result<Fr, Error> {
+        let column_constants = PoseidonConstants::<Bls12, ColumnArity>::new();
         // All the leaves will be the same.
-        let element = Poseidon::new_with_preimage(&column, &self.column_constants).hash();
+        let element = Poseidon::new_with_preimage(&column, &column_constants).hash();
 
         self.tree_builder.compute_uniform_tree_root(element)
     }
