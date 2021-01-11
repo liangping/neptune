@@ -26,7 +26,7 @@ where
     data: Vec<Fr>,
     /// Index of the first unfilled datum.
     fill_index: usize,
-    tree_constants: PoseidonConstants<Bls12, TreeArity>,
+    //tree_constants: PoseidonConstants<Bls12, TreeArity>,
     tree_batcher: Option<Batcher<TreeArity>>,
     rows_to_discard: usize,
 }
@@ -97,7 +97,7 @@ where
             leaf_count,
             data: vec![Fr::zero(); leaf_count],
             fill_index: 0,
-            tree_constants: PoseidonConstants::<Bls12, TreeArity>::new(),
+            //tree_constants: PoseidonConstants::<Bls12, TreeArity>::new(),
             tree_batcher: if let Some(t) = &t {
                 Some(Batcher::<TreeArity>::new(t, max_tree_batch_size)?)
             } else {
@@ -161,9 +161,10 @@ where
                 }
             }
             None => {
+                let tree_constants = PoseidonConstants::<Bls12, TreeArity>::new();
                 for i in self.leaf_count..intermediate_tree_size {
                     tree_data[i] =
-                        Poseidon::new_with_preimage(&tree_data[start..end], &self.tree_constants)
+                        Poseidon::new_with_preimage(&tree_data[start..end], &tree_constants)
                             .hash();
                     start += arity;
                     end += arity;
@@ -236,10 +237,11 @@ where
     pub fn compute_uniform_tree_root(&mut self, leaf: Fr) -> Result<Fr, Error> {
         let arity = TreeArity::to_usize();
         let mut element = leaf;
+        let tree_constants = PoseidonConstants::<Bls12, TreeArity>::new();
         for _ in 0..self.tree_height() {
             let preimage = vec![element; arity];
             // Each row is the hash of the identical elements in the previous row.
-            element = Poseidon::new_with_preimage(&preimage, &self.tree_constants).hash();
+            element = Poseidon::new_with_preimage(&preimage, &tree_constants).hash();
         }
 
         // The last element computed is the root.
