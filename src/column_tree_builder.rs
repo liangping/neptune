@@ -34,7 +34,7 @@ where
     data: Vec<Fr>,
     /// Index of the first unfilled datum.
     fill_index: usize,
-    column_constants: PoseidonConstants<Bls12, ColumnArity>,
+    //column_constants: PoseidonConstants<Bls12, ColumnArity>,
     pub column_batcher: Option<Batcher<ColumnArity>>,
     tree_builder: TreeBuilder<TreeArity>,
 }
@@ -160,7 +160,7 @@ where
             leaf_count,
             data: vec![Fr::zero(); leaf_count],
             fill_index: 0,
-            column_constants: PoseidonConstants::<Bls12, ColumnArity>::new(),
+            //column_constants: PoseidonConstants::<Bls12, ColumnArity>::new(),
             column_batcher,
             tree_builder,
         };
